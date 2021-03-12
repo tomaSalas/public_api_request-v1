@@ -2,7 +2,7 @@
 
 
 const profiles = document.querySelector("#gallery");
-
+const search = document.querySelector(".search-container");
 
 
 
@@ -12,7 +12,7 @@ const profiles = document.querySelector("#gallery");
 //  url
 // ------------------------------------------
 
-const data = ["https://randomuser.me/api/?results=12"];
+const data = ["https://randomuser.me/api/?results=12&&nat=US"];
 let dataCollect = [];
 
 
@@ -49,11 +49,9 @@ function checkStatus(response) {
 }
 
 function readerHTML(data) {
-    console.log(data);
     for (let i = 0; i < data.results.length; i += 1) {
         const card = document.createElement("div");
         card.className = "card";
-        profiles.appendChild;
         let fName = data.results[i].name.first;
         let lName = data.results[i].name.last;
         let img = data.results[i].picture.large;
@@ -64,7 +62,6 @@ function readerHTML(data) {
         let phone = data.results[i].phone;
         let birthday = data.results[i].dob.date;
         let fullBirthday = getFormattedDate(birthday);
-        console.log(fullBirthday);
         phone = formatPhoneNumber(phone);
 
         let htmlOverview = ` 
@@ -96,7 +93,6 @@ function readerHTML(data) {
             
         profiles.appendChild(card);
     }
-   console.log(dataCollect)
     addEventsToCards();
 }
 
@@ -146,6 +142,131 @@ function removeDiv() {
   
 
 }
+
+function searchBar() {
+    let htmlSearch = `
+    <form action="#" method="get">
+        <input type="search" id="search-input" class="search-input" placeholder="Search...">
+        <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
+    </form>
+    `;
+
+    search.insertAdjacentHTML("beforeend", htmlSearch);
+    const input = search.querySelector("#search-input");
+    input.addEventListener("keyup", searchNameKeyDown);
+    const submit = search.querySelector("#search-submit");
+    submit.addEventListener("click", searchNameClick);
+}
+
+function searchNameKeyDown(event) {
+    let input = event.target;
+    let filter = input.value.toUpperCase();
+    let data = dataCollect;
+    let matches = [];
+
+    // match the names with the input add them to array
+   for (let i = 0; i < data.length; i += 1) {
+        let obj = data[i];
+        let name = `${obj.first} ${obj.last}`;
+        console.log(name);
+        name = name.toLocaleUpperCase();
+        if (name.includes(filter)) {
+            matches.push(obj);
+        }
+    }
+    
+    if (matches.length === 0) {
+        input.style.borderColor = "red";
+           
+    } else {
+        input.style.borderColor = "grey";   
+
+    }
+    readerSearch(matches);
+    
+}
+
+
+function searchNameClick(event) {
+    console.log("fire");
+    event.preventDefault();
+    const inputElement= search.querySelector("#search-input");
+    let input = inputElement.value;
+    let filter = input.toUpperCase();
+    let data = dataCollect;
+    let matches = [];
+
+    // match the names with the input add them to array
+   for (let i = 0; i < data.length; i += 1) {
+        let obj = data[i];
+        let name = `${obj.first} ${obj.last}`;
+        name = name.toLocaleUpperCase();
+        if (name.includes(filter)) {
+            matches.push(obj);
+        }
+    }
+    
+    if (matches.length === 0) {
+        inputElement.style.borderColor = "red";
+           
+    } else {
+        inputElement.style.borderColor = "grey";   
+
+    }
+    readerSearch(matches);
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function readerSearch(matches) {
+    
+    profiles.innerHTML = "";
+    if (matches.length === 0) {
+        profiles.innerHTML = `<h1> No Match Found</h1>`;
+    }
+    matches.forEach( profile => {
+        const card = document.createElement("div");
+        card.className = "card";
+        let html = ` 
+            <div class="card-img-container">
+                <img class="card-img" src="${profile.img}" alt="profile picture">
+            </div>
+            <div class="card-info-container">
+                <h3 id="name" class="card-name cap">${profile.first} ${profile.last}</h3>
+                <p class="card-text">${profile.email}</p>
+                <p class="card-text cap">${profile.address}</p>
+            </div>
+        `;
+        card.insertAdjacentHTML("beforeend", html);
+        profiles.appendChild(card);
+    });
+    
+}
+
+
+
+
+    
+
+
+
 // https://stackoverflow.com/questions/8358084/regular-expression-to-reformat-a-us-phone-number-in-javascript
 function formatPhoneNumber(phoneNumberString) {
     var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
@@ -158,7 +279,6 @@ function formatPhoneNumber(phoneNumberString) {
 
   function getFormattedDate(date) {
     let obj = new Date(date);
-    console.log(obj);
     let mouth = obj.getMonth();
     let day = obj.getDay();
     let year = obj.getFullYear();
@@ -170,7 +290,7 @@ function formatPhoneNumber(phoneNumberString) {
 //  main func
 // ------------------------------------------
 
-
+searchBar();
 requestAPI(data[0])
     .then( data => readerHTML(data))
 
