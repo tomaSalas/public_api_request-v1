@@ -12,7 +12,7 @@ const search = document.querySelector(".search-container");
 //  url
 // ------------------------------------------
 
-const data = ["https://randomuser.me/api/?results=12&&nat=US"];
+const data = ["https://randomuser.me/api/?results=100&&nat=US"];
 let dataCollect = [];
 let currentProfile;
 
@@ -131,11 +131,14 @@ function readerHTMLOnClick(event) {
         `;
 
         if (name.textContent === dataCollect[i].key) {
+
             profiles.insertAdjacentHTML("beforeend", html);
+
             const prev = document.querySelector("#modal-prev");
             prev.addEventListener("click", preProfile);
-            // const next = document.querySelector("#modal-next");
-            // next.addEventListener("click", nextProfile);
+
+            const next = document.querySelector("#modal-next");
+            next.addEventListener("click", nextProfile);
 
             const buttonClose = document.querySelector("#modal-close-btn");
             buttonClose.addEventListener("click", removeDiv);
@@ -183,8 +186,8 @@ function readerPrev(int) {
     profiles.insertAdjacentHTML("beforeend", html);
     const prev = document.querySelector("#modal-prev");
     prev.addEventListener("click", preProfile);
-    // const next = document.querySelector("#modal-next");
-    // next.addEventListener("click", nextProfile);
+    const next = document.querySelector("#modal-next");
+    next.addEventListener("click", nextProfile);
 
     const buttonClose = document.querySelector("#modal-close-btn");
     buttonClose.addEventListener("click", removeDiv);
@@ -196,19 +199,75 @@ function readerPrev(int) {
 
 
 
+
+function nextProfileElement(int) {
+    let profile = 0;
+    console.log(int);
+    if ((int + 1) >= dataCollect.length) {
+        profile = dataCollect[profile];
+    } else {
+
+        profile = dataCollect[int + 1];
+    }
+        
+    let html = `
+    <div class="modal-container">
+        <div class="modal">
+            <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
+            <div class="modal-info-container">
+                <img class="modal-img" src="${profile.img}" alt="profile picture">
+                <h3 id="name" class="modal-name cap">${profile.first} ${profile.last}</h3>
+                <p class="modal-text">${profile.email}</p>
+                <p class="modal-text cap">${profile.address}</p>
+                <hr>
+                <p class="modal-text">${profile.phone}</p>
+                <p class="modal-text">${profile.address}, ${profile.city} ${profile.zipCode}</p>
+                <p class="modal-text">Birthday: ${profile.birthday}</p>
+            </div>
+        </div>
+        <div class="modal-btn-container">
+            <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
+            <button type="button" id="modal-next" class="modal-next btn">Next</button>
+        </div>
+    `;
+
+    profiles.insertAdjacentHTML("beforeend", html);
+    const prev = document.querySelector("#modal-prev");
+    prev.addEventListener("click", preProfile);
+    const next = document.querySelector("#modal-next");
+    next.addEventListener("click", nextProfile);
+
+    const buttonClose = document.querySelector("#modal-close-btn");
+    buttonClose.addEventListener("click", removeDiv);
+    currentProfile = dataCollect.indexOf(profile);
+    
+
+
+}
+
+
+
+
+
+
 function preProfile(event) {
     if (event.target.className === "modal-prev btn") {
         console.log("You click th ebutton");
         const divWrapper = document.querySelector(".modal-container");
         divWrapper.remove();
         readerPrev(currentProfile);
+        
+    }
+  
 
+}
 
-        // //profiles.remove(profiles.lastChild);
-        // const button = event.target;
-        // console.log(button)
-        // const card = button.parentElement.parentElement;
-        // console.log(card);
+function nextProfile(event) {
+    if (event.target.className === "modal-next btn") {
+        console.log("You click th ebutton");
+        const divWrapper = document.querySelector(".modal-container");
+        divWrapper.remove();
+        nextProfileElement(currentProfile);
         
     }
   
