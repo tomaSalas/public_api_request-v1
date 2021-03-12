@@ -14,6 +14,8 @@ const search = document.querySelector(".search-container");
 
 const data = ["https://randomuser.me/api/?results=12&&nat=US"];
 let dataCollect = [];
+let currentProfile;
+
 
 
 
@@ -107,9 +109,8 @@ function readerHTMLOnClick(event) {
     const name = card.querySelector("#name");
 
     for (let i = 0; i < dataCollect.length; i += 1) {
-        if (name.textContent === dataCollect[i].key) {
-            let html = `
-            <div class="modal-container">
+        let html = `
+        <div class="modal-container">
             <div class="modal">
                 <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
                 <div class="modal-info-container">
@@ -121,20 +122,106 @@ function readerHTMLOnClick(event) {
                     <p class="modal-text">${dataCollect[i].phone}</p>
                     <p class="modal-text">${dataCollect[i].address}, ${dataCollect[i].city} ${dataCollect[i].zipCode}</p>
                     <p class="modal-text">Birthday: ${dataCollect[i].birthday}</p>
-                    
                 </div>
             </div>
-        </div>
+            <div class="modal-btn-container">
+                <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
+                <button type="button" id="modal-next" class="modal-next btn">Next</button>
+            </div>
         `;
-        profiles.insertAdjacentHTML("beforeend", html);
-        break;
+
+        if (name.textContent === dataCollect[i].key) {
+            profiles.insertAdjacentHTML("beforeend", html);
+            const prev = document.querySelector("#modal-prev");
+            prev.addEventListener("click", preProfile);
+            // const next = document.querySelector("#modal-next");
+            // next.addEventListener("click", nextProfile);
+
+            const buttonClose = document.querySelector("#modal-close-btn");
+            buttonClose.addEventListener("click", removeDiv);
+            currentProfile = i;
         }
+       
+       
+        
     }
+
+ 
+
+} 
+
+function readerPrev(int) {
+    let profile = 0;
+    if ((int - 1) < 0) {
+        profile = dataCollect[dataCollect.length -1];
+    } else {
+
+        profile = dataCollect[int - 1];
+    }
+        
+    let html = `
+    <div class="modal-container">
+        <div class="modal">
+            <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
+            <div class="modal-info-container">
+                <img class="modal-img" src="${profile.img}" alt="profile picture">
+                <h3 id="name" class="modal-name cap">${profile.first} ${profile.last}</h3>
+                <p class="modal-text">${profile.email}</p>
+                <p class="modal-text cap">${profile.address}</p>
+                <hr>
+                <p class="modal-text">${profile.phone}</p>
+                <p class="modal-text">${profile.address}, ${profile.city} ${profile.zipCode}</p>
+                <p class="modal-text">Birthday: ${profile.birthday}</p>
+            </div>
+        </div>
+        <div class="modal-btn-container">
+            <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
+            <button type="button" id="modal-next" class="modal-next btn">Next</button>
+        </div>
+    `;
+
+    profiles.insertAdjacentHTML("beforeend", html);
+    const prev = document.querySelector("#modal-prev");
+    prev.addEventListener("click", preProfile);
+    // const next = document.querySelector("#modal-next");
+    // next.addEventListener("click", nextProfile);
 
     const buttonClose = document.querySelector("#modal-close-btn");
     buttonClose.addEventListener("click", removeDiv);
+    currentProfile = dataCollect.indexOf(profile);
+    
 
-} 
+
+}
+
+
+
+function preProfile(event) {
+    if (event.target.className === "modal-prev btn") {
+        console.log("You click th ebutton");
+        const divWrapper = document.querySelector(".modal-container");
+        divWrapper.remove();
+        readerPrev(currentProfile);
+
+
+        // //profiles.remove(profiles.lastChild);
+        // const button = event.target;
+        // console.log(button)
+        // const card = button.parentElement.parentElement;
+        // console.log(card);
+        
+    }
+  
+
+}
+
+
+
+
+
+
+
+
 
 function removeDiv() {
     const divWrapper = document.querySelector(".modal-container");
