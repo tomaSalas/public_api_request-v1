@@ -12,7 +12,7 @@ const search = document.querySelector(".search-container");
 //  url
 // ------------------------------------------
 
-const data = ["https://randomuser.me/api/?results=100&&nat=US"];
+const data = ["https://randomuser.me/api/?results=12&&nat=US"];
 let dataCollect = [];
 let currentProfile;
 
@@ -21,7 +21,7 @@ let currentProfile;
 
 
 // ------------------------------------------
-//  FETCH FUNCTIONS
+//  FETCH FUNCTION
 // ------------------------------------------
 
 // asked for data
@@ -49,7 +49,7 @@ function checkStatus(response) {
     }
 
 }
-
+// after the data is received extract it and display it, and store it temporary array of objects 
 function readerHTML(data) {
     for (let i = 0; i < data.results.length; i += 1) {
         const card = document.createElement("div");
@@ -95,6 +95,7 @@ function readerHTML(data) {
             
         profiles.appendChild(card);
     }
+    // add click event to the cards
     addEventsToCards();
 }
 
@@ -103,11 +104,19 @@ function addEventsToCards() {
     cards.forEach( card => card.addEventListener("click", readerHTMLOnClick));
 
 }
-
+// expands the information of the profile
 function readerHTMLOnClick(event) {
-    const card = event.target;
-    const name = card.querySelector("#name");
-
+    // this section is trying to get the wrapper div with className ".card"
+    // if it does not find it, the algorithm will select the parent element until it gets to the className ".card"
+    let card = event.target;
+    if (card.className !== "card") {
+       card = card.parentElement;
+        if (card.className !== "card" ) {
+            card = card.parentElement;
+        } 
+    } 
+    let name = card.querySelector("#name");
+    // creates all of the information to expand profile and display it
     for (let i = 0; i < dataCollect.length; i += 1) {
         let html = `
         <div class="modal-container">
@@ -129,7 +138,7 @@ function readerHTMLOnClick(event) {
                 <button type="button" id="modal-next" class="modal-next btn">Next</button>
             </div>
         `;
-
+        // adds to the page the profile that matches the click and ads all of the events 
         if (name.textContent === dataCollect[i].key) {
 
             profiles.insertAdjacentHTML("beforeend", html);
@@ -143,8 +152,7 @@ function readerHTMLOnClick(event) {
             const buttonClose = document.querySelector("#modal-close-btn");
             buttonClose.addEventListener("click", removeDiv);
             currentProfile = i;
-        }
-       
+        } 
        
         
     }
@@ -153,6 +161,7 @@ function readerHTMLOnClick(event) {
 
 } 
 
+// checks to see if the index of the array is 0, if this is the case it display the last element of the array
 function readerPrev(int) {
     let profile = 0;
     if ((int - 1) < 0) {
@@ -199,7 +208,7 @@ function readerPrev(int) {
 
 
 
-
+// checks to see the last index of array, if this is the case it display the first element of the array 
 function nextProfileElement(int) {
     let profile = 0;
     console.log(int);
@@ -249,10 +258,9 @@ function nextProfileElement(int) {
 
 
 
-
+// removes profile after the left arrow is click and display the next one
 function preProfile(event) {
     if (event.target.className === "modal-prev btn") {
-        console.log("You click th ebutton");
         const divWrapper = document.querySelector(".modal-container");
         divWrapper.remove();
         readerPrev(currentProfile);
@@ -262,9 +270,9 @@ function preProfile(event) {
 
 }
 
+// removes profile after the right arrow is click and display the next one
 function nextProfile(event) {
     if (event.target.className === "modal-next btn") {
-        console.log("You click th ebutton");
         const divWrapper = document.querySelector(".modal-container");
         divWrapper.remove();
         nextProfileElement(currentProfile);
@@ -280,7 +288,7 @@ function nextProfile(event) {
 
 
 
-
+//removes cards
 
 function removeDiv() {
     const divWrapper = document.querySelector(".modal-container");
@@ -288,7 +296,7 @@ function removeDiv() {
   
 
 }
-
+// creates the searchBar
 function searchBar() {
     let htmlSearch = `
     <form action="#" method="get">
@@ -304,6 +312,7 @@ function searchBar() {
     submit.addEventListener("click", searchNameClick);
 }
 
+// keydown event handdler for the search
 function searchNameKeyDown(event) {
     let input = event.target;
     let filter = input.value.toUpperCase();
@@ -328,13 +337,13 @@ function searchNameKeyDown(event) {
         input.style.borderColor = "grey";   
 
     }
+    // diplay the match cards
     readerSearch(matches);
     
 }
 
-
+// click event handler for the search 
 function searchNameClick(event) {
-    console.log("fire");
     event.preventDefault();
     const inputElement= search.querySelector("#search-input");
     let input = inputElement.value;
@@ -366,21 +375,7 @@ function searchNameClick(event) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// display the result from the search
 function readerSearch(matches) {
     
     profiles.innerHTML = "";
@@ -402,6 +397,7 @@ function readerSearch(matches) {
         `;
         card.insertAdjacentHTML("beforeend", html);
         profiles.appendChild(card);
+        addEventsToCards();
     });
     
 }
