@@ -76,8 +76,10 @@ function readerHTML(data) {
                 <p class="card-text cap">${address}</p>
             </div>
         `;
-       
+        card.style.boxShadow = "0px 8px 8px rgba(0,0,0,0.12)";
         card.insertAdjacentHTML("beforeend", htmlOverview);
+
+        
         dataCollect.push(
             {
             key: `${fName} ${lName}`,
@@ -142,6 +144,8 @@ function readerHTMLOnClick(event) {
         if (name.textContent === dataCollect[i].key) {
 
             profiles.insertAdjacentHTML("beforeend", html);
+
+            
 
             const prev = document.querySelector("#modal-prev");
             prev.addEventListener("click", preProfile);
@@ -395,6 +399,7 @@ function readerSearch(matches) {
                 <p class="card-text cap">${profile.address}</p>
             </div>
         `;
+        card.style.boxShadow = "0px 8px 8px rgba(0,0,0,0.12)";
         card.insertAdjacentHTML("beforeend", html);
         profiles.appendChild(card);
         addEventsToCards();
