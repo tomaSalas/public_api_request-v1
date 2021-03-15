@@ -51,6 +51,7 @@ function checkStatus(response) {
 }
 // after the data is received extract it and display it, and store it temporary array of objects 
 function readerHTML(data) {
+    console.log(data);
     for (let i = 0; i < data.results.length; i += 1) {
         const card = document.createElement("div");
         card.className = "card";
@@ -73,7 +74,7 @@ function readerHTML(data) {
             <div class="card-info-container">
                 <h3 id="name" class="card-name cap">${fName} ${lName}</h3>
                 <p class="card-text">${email}</p>
-                <p class="card-text cap">${address}</p>
+                <p class="card-text cap">${city}</p>
             </div>
         `;
         card.style.boxShadow = "0px 8px 8px rgba(0,0,0,0.12)";
@@ -396,7 +397,7 @@ function readerSearch(matches) {
             <div class="card-info-container">
                 <h3 id="name" class="card-name cap">${profile.first} ${profile.last}</h3>
                 <p class="card-text">${profile.email}</p>
-                <p class="card-text cap">${profile.address}</p>
+                <p class="card-text cap">${profile.city}</p>
             </div>
         `;
         card.style.boxShadow = "0px 8px 8px rgba(0,0,0,0.12)";
