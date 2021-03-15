@@ -29,7 +29,7 @@ function requestAPI(url) {
     return fetch(url)
            .then(checkStatus)
            .then(data => data.json())
-           .catch(error => console.log("Looks ther was a problem parsing the data ", error))
+           .catch(error => ("Looks ther was a problem parsing the data ", error))
 
 }
 
@@ -51,7 +51,7 @@ function checkStatus(response) {
 }
 // after the data is received extract it and display it, and store it temporary array of objects 
 function readerHTML(data) {
-    console.log(data);
+    (data);
     for (let i = 0; i < data.results.length; i += 1) {
         const card = document.createElement("div");
         card.className = "card";
@@ -216,7 +216,7 @@ function readerPrev(int) {
 // checks to see the last index of array, if this is the case it display the first element of the array 
 function nextProfileElement(int) {
     let profile = 0;
-    console.log(int);
+    (int);
     if ((int + 1) >= dataCollect.length) {
         profile = dataCollect[profile];
     } else {
@@ -328,7 +328,7 @@ function searchNameKeyDown(event) {
    for (let i = 0; i < data.length; i += 1) {
         let obj = data[i];
         let name = `${obj.first} ${obj.last}`;
-        console.log(name);
+        (name);
         name = name.toLocaleUpperCase();
         if (name.includes(filter)) {
             matches.push(obj);
